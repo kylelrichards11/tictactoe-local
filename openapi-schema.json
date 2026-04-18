@@ -1,0 +1,345 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Tic-Tac-Toe Analysis",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/analyze": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Post Analyze",
+        "operationId": "post_analyze",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyzeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/next-states": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Post Next States",
+        "operationId": "post_next_states",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NextStatesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NextStatesResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/count-games": {
+      "get": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Get Count Games",
+        "operationId": "get_count_games",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountGamesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bot-move": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Post Bot Move",
+        "operationId": "post_bot_move",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BotMoveRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BotMoveResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health Check",
+        "operationId": "health_check",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnalyzeRequest": {
+        "properties": {
+          "board": {
+            "type": "string",
+            "maxLength": 9,
+            "minLength": 9,
+            "pattern": "^[xo.]{9}$",
+            "title": "Board"
+          }
+        },
+        "type": "object",
+        "required": [
+          "board"
+        ],
+        "title": "AnalyzeRequest"
+      },
+      "AnalyzeResponse": {
+        "properties": {
+          "score": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score"
+          }
+        },
+        "type": "object",
+        "required": [
+          "score"
+        ],
+        "title": "AnalyzeResponse"
+      },
+      "BotMoveRequest": {
+        "properties": {
+          "board": {
+            "type": "string",
+            "maxLength": 9,
+            "minLength": 9,
+            "pattern": "^[xo.]{9}$",
+            "title": "Board"
+          },
+          "difficulty": {
+            "type": "string",
+            "enum": [
+              "easy",
+              "hard"
+            ],
+            "title": "Difficulty",
+            "default": "easy"
+          }
+        },
+        "type": "object",
+        "required": [
+          "board"
+        ],
+        "title": "BotMoveRequest"
+      },
+      "BotMoveResponse": {
+        "properties": {
+          "board": {
+            "type": "string",
+            "title": "Board"
+          }
+        },
+        "type": "object",
+        "required": [
+          "board"
+        ],
+        "title": "BotMoveResponse"
+      },
+      "CountGamesResponse": {
+        "properties": {
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "count"
+        ],
+        "title": "CountGamesResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "NextStatesRequest": {
+        "properties": {
+          "board": {
+            "type": "string",
+            "maxLength": 9,
+            "minLength": 9,
+            "pattern": "^[xo.]{9}$",
+            "title": "Board"
+          }
+        },
+        "type": "object",
+        "required": [
+          "board"
+        ],
+        "title": "NextStatesRequest"
+      },
+      "NextStatesResponse": {
+        "properties": {
+          "next_states": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Next States"
+          }
+        },
+        "type": "object",
+        "required": [
+          "next_states"
+        ],
+        "title": "NextStatesResponse"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
