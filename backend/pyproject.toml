@@ -23,6 +23,9 @@ testpaths = ["tests"]
 source = ["app"]
 branch = true
 
+[tool.coverage.json]
+show_contexts = true
+
 [tool.ruff]
 target-version = "py312"
 line-length = 88
