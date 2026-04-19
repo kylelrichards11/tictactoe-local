@@ -4,7 +4,7 @@ import random
 from functools import cache
 
 X = "x"
-O = "o"
+O = "o"  # noqa: E741
 EMPTY = "."
 
 WINS = [

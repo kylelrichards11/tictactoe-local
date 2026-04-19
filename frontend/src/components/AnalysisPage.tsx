@@ -1,9 +1,9 @@
 import { useState } from "react";
 
+import { postAnalyze } from "@/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { postAnalyze } from "@/client";
 
 import { BoardInput } from "./BoardInput";
 

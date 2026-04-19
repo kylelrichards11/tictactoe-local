@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { postAnalyze, postBotMove } from "@/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { postAnalyze, postBotMove } from "@/client";
 import { cn } from "@/lib/utils";
 
 type Difficulty = "easy" | "hard";
@@ -113,9 +113,7 @@ export function PlayPage() {
             <button
               key={i}
               onClick={() => handleCellClick(i)}
-              disabled={
-                status !== "your-turn" || cell !== "." || isGameOver
-              }
+              disabled={status !== "your-turn" || cell !== "." || isGameOver}
               className={cn(
                 "flex h-20 w-20 items-center justify-center border-2 rounded-md text-3xl font-bold transition-colors",
                 "hover:bg-accent disabled:cursor-not-allowed",
@@ -156,9 +154,7 @@ export function PlayPage() {
             </CardContent>
           </Card>
 
-          {isGameOver && (
-            <Button onClick={handleNewGame}>New Game</Button>
-          )}
+          {isGameOver && <Button onClick={handleNewGame}>New Game</Button>}
         </div>
       </div>
     </div>

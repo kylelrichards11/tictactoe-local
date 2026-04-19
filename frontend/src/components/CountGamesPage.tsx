@@ -1,8 +1,8 @@
 import { useState } from "react";
 
+import { getCountGames } from "@/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getCountGames } from "@/client";
 
 export function CountGamesPage() {
   const [count, setCount] = useState<number | null>(null);

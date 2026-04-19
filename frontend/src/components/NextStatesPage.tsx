@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
 import { postNextStates } from "@/client";
+import { Button } from "@/components/ui/button";
 
 import { BoardDisplay } from "./BoardDisplay";
 import { BoardInput } from "./BoardInput";
