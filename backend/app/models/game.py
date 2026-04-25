@@ -25,7 +25,7 @@ class CountGamesResponse(BaseModel):
 
 class BotMoveRequest(BaseModel):
     board: str = Field(..., min_length=9, max_length=9, pattern=r"^[xo.]{9}$")
-    difficulty: Literal["easy", "hard"] = "easy"
+    difficulty: Literal["easy", "medium", "hard"] = "easy"
 
 
 class BotMoveResponse(BaseModel):

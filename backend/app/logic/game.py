@@ -68,6 +68,10 @@ class State:
                 result.append(new_board)
         return result
 
+    def is_terminal(self) -> bool:
+        """True if the game is over (someone won or the board is full)."""
+        return self.score() is not None
+
     def __hash__(self):
         return hash(self.board)
 
@@ -98,6 +102,19 @@ def bot_move(board: str, difficulty: str = "easy") -> str:
     moves = state.legal_moves()
     if not moves:
         raise ValueError("No legal moves available")
+
+    if difficulty == "medium":
+        # Take a winning move if one exists, else block, else random.
+        me = state.turn
+        opponent = O if me == X else X
+        for move in moves:
+            if State(move)._winner() == me:
+                return move
+        for move in moves:
+            blocking_state = State(move[:move.index(me)] + opponent + move[move.index(me) + 1:]) if me in move else None
+            if blocking_state and blocking_state._winner() == opponent:
+                return move
+        return random.choice(moves)
 
     if difficulty == "hard":
         # TODO: implement minimax or similar
