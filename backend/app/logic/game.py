@@ -92,6 +92,19 @@ def count_games() -> int:
     return _count_sub_games(".........")
 
 
+def describe_result(board: str) -> str:
+    """Return a human-readable description of a finished or in-progress game."""
+    state = State(board)
+    score = state.score()
+    if score == 1:
+        return "X wins"
+    if score == -1:
+        return "O wins"
+    if score == 0:
+        return "Draw"
+    return f"{state.turn.upper()} to move"
+
+
 def bot_move(board: str, difficulty: str = "easy") -> str:
     """Choose a move for the bot. Returns the new board string."""
     state = State(board)
