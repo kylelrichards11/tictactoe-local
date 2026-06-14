@@ -1,12 +1,15 @@
 from fastapi import APIRouter, HTTPException
 
+from app.logic.analysis import analyze_game
 from app.logic.game import State, bot_move, count_games
 from app.models.game import (
+    AnalyzeGameRequest,
     AnalyzeRequest,
     AnalyzeResponse,
     BotMoveRequest,
     BotMoveResponse,
     CountGamesResponse,
+    GameAnalysis,
     NextStatesRequest,
     NextStatesResponse,
 )
@@ -38,3 +41,17 @@ def post_bot_move(req: BotMoveRequest):
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     return BotMoveResponse(board=result)
+
+
+@router.post("/analyze-game", response_model=GameAnalysis)
+def post_analyze_game(req: AnalyzeGameRequest):
+    try:
+        states = [State(b) for b in req.boards]
+        for i in range(len(states) - 1):
+            if states[i + 1].board not in states[i].legal_moves():
+                raise ValueError(
+                    f"Move {i + 1} is not a legal continuation of move {i}"
+                )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return analyze_game(states)

@@ -100,8 +100,8 @@ def bot_move(board: str, difficulty: str = "easy") -> str:
         raise ValueError("No legal moves available")
 
     if difficulty == "hard":
-        # TODO: implement minimax or similar
-        return random.choice(moves)
+        from app.logic.analysis import hard_bot_move
 
-    # Easy mode: random
+        return hard_bot_move(board)
+
     return random.choice(moves)
