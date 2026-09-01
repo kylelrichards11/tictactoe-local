@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRoute
 
-from app.api.routers import game
+from app.api.routers import game, stats
 
 
 @asynccontextmanager
@@ -35,6 +35,7 @@ def create_app() -> FastAPI:
     )
 
     app.include_router(game.router)
+    app.include_router(stats.router)
 
     @app.get("/health")
     def health_check():
