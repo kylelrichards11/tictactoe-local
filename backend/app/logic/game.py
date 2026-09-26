@@ -20,7 +20,10 @@ WINS = [
 
 
 class State:
-    """State of a tic-tac-toe board, represented as a 9-character string."""
+    """State of a tic-tac-toe board, represented as a 9-character string.
+
+    Cells run left to right, top to bottom; each is "x", "o" or "." (empty).
+    """
 
     def __init__(self, board: str = EMPTY_BOARD):
         # demo gap: the invalid-board branch is deliberately never exercised,
