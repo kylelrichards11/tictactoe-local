@@ -28,6 +28,11 @@ turns the animation off.
 - **History** (`/history`): your recent games and win rates, from localStorage.
 - **About** (`/about`): the stack, and a note that this is verifAIed's demo app.
 
+## Requirements
+
+- Python 3.12+ and [uv](https://docs.astral.sh/uv/)
+- Node 20+ and pnpm 10
+
 ## Run it
 
 ```bash
