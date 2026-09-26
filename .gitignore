@@ -63,3 +63,10 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Test and coverage output
+coverage.json
+junit.xml
+frontend/coverage/
+test-results/
+playwright-report/

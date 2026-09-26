@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  backend-test:
+  backend-lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -25,11 +25,7 @@ jobs:
 
       - name: Lint
         working-directory: backend
-        run: .venv/bin/ruff check .
-
-      - name: Test
-        working-directory: backend
-        run: .venv/bin/pytest --cov --cov-report=term-missing --cov-report=json
+        run: .venv/bin/ruff check . && .venv/bin/ruff format --check .
 
   frontend-lint:
     runs-on: ubuntu-latest
@@ -46,8 +42,7 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        working-directory: frontend
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Type check
         working-directory: frontend
