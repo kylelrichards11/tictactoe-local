@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import random
 from functools import cache
 
 X = "x"
 O = "o"  # noqa: E741
 EMPTY = "."
+EMPTY_BOARD = "........."
 
 WINS = [
     (0, 1, 2),
@@ -22,7 +22,9 @@ WINS = [
 class State:
     """State of a tic-tac-toe board, represented as a 9-character string."""
 
-    def __init__(self, board: str = "........."):
+    def __init__(self, board: str = EMPTY_BOARD):
+        # demo gap: the invalid-board branch is deliberately never exercised,
+        # so this function shows up as partially covered in verifAIed.
         if len(board) != 9 or not all(c in "xo." for c in board):
             raise ValueError(f"Invalid board: {board}")
         self.board = board
@@ -34,10 +36,11 @@ class State:
         o_count = self.board.count(O)
         return X if x_count == o_count else O
 
-    def _winner(self) -> str | None:
+    def winning_line(self) -> tuple[int, int, int] | None:
+        """Return the three cells of the completed line, if there is one."""
         for a, b, c in WINS:
             if self.board[a] == self.board[b] == self.board[c] != EMPTY:
-                return self.board[a]
+                return (a, b, c)
         return None
 
     def score(self) -> int | None:
@@ -47,11 +50,9 @@ class State:
         for the 'x' player, -1 for a victory for the 'o' player, and 0 for a
         draw.
         """
-        winner = self._winner()
-        if winner == X:
-            return 1
-        if winner == O:
-            return -1
+        line = self.winning_line()
+        if line is not None:
+            return 1 if self.board[line[0]] == X else -1
         if EMPTY not in self.board:
             return 0
         return None
@@ -89,19 +90,4 @@ def _count_sub_games(board: str) -> int:
 
 def count_games() -> int:
     """Count the number of legal games of tic-tac-toe."""
-    return _count_sub_games(".........")
-
-
-def bot_move(board: str, difficulty: str = "easy") -> str:
-    """Choose a move for the bot. Returns the new board string."""
-    state = State(board)
-    moves = state.legal_moves()
-    if not moves:
-        raise ValueError("No legal moves available")
-
-    if difficulty == "hard":
-        # TODO: implement minimax or similar
-        return random.choice(moves)
-
-    # Easy mode: random
-    return random.choice(moves)
+    return _count_sub_games(EMPTY_BOARD)
