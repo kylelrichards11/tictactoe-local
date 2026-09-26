@@ -78,6 +78,11 @@ class State:
         return False
 
 
+def empty_count(board: str) -> int:
+    """How many cells are still open on `board`."""
+    return State(board).board.count(EMPTY)
+
+
 @cache
 def _count_sub_games(board: str) -> int:
     """Count the number of legal games starting from the given board state."""

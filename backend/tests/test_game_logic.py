@@ -1,6 +1,6 @@
 import pytest
 
-from app.logic.game import State, count_games
+from app.logic.game import State, count_games, empty_count
 
 
 class TestTurn:
@@ -77,3 +77,11 @@ def test_count_games():
 def test_count_games_from_a_position():
     assert count_games("o...x...x") == 536
     assert count_games("....x....") == 25872
+
+
+class TestEmptyCount:
+    def test_fresh_board(self):
+        assert empty_count(".........") == 9
+
+    def test_part_played(self):
+        assert empty_count("xo.x.....") == 6
