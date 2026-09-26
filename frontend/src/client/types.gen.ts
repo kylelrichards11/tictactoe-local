@@ -91,6 +91,20 @@ export type EvaluateResponse = {
 };
 
 /**
+ * GameResultIn
+ */
+export type GameResultIn = {
+    /**
+     * Winner
+     */
+    winner: 'x' | 'o' | null;
+    /**
+     * Difficulty
+     */
+    difficulty: 'easy' | 'hard';
+};
+
+/**
  * HTTPValidationError
  */
 export type HttpValidationError = {
@@ -118,6 +132,46 @@ export type NextStatesResponse = {
      * Next States
      */
     next_states: Array<string>;
+};
+
+/**
+ * StatsRequest
+ */
+export type StatsRequest = {
+    /**
+     * Games
+     */
+    games: Array<GameResultIn>;
+};
+
+/**
+ * StatsResponse
+ */
+export type StatsResponse = {
+    /**
+     * X Wins
+     */
+    x_wins: number;
+    /**
+     * O Wins
+     */
+    o_wins: number;
+    /**
+     * Draws
+     */
+    draws: number;
+    /**
+     * Hard Win Rate
+     */
+    hard_win_rate: number | null;
+    /**
+     * Easy Win Rate
+     */
+    easy_win_rate: number | null;
+    /**
+     * Hard Bot Unbeaten
+     */
+    hard_bot_unbeaten: boolean;
 };
 
 /**
@@ -277,6 +331,31 @@ export type PostBotMoveResponses = {
 };
 
 export type PostBotMoveResponse = PostBotMoveResponses[keyof PostBotMoveResponses];
+
+export type PostStatsData = {
+    body: StatsRequest;
+    path?: never;
+    query?: never;
+    url: '/stats';
+};
+
+export type PostStatsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type PostStatsError = PostStatsErrors[keyof PostStatsErrors];
+
+export type PostStatsResponses = {
+    /**
+     * Successful Response
+     */
+    200: StatsResponse;
+};
+
+export type PostStatsResponse = PostStatsResponses[keyof PostStatsResponses];
 
 export type HealthCheckData = {
     body?: never;

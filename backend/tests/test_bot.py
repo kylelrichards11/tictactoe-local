@@ -62,3 +62,8 @@ class TestBotMove:
                 play(reply)
 
         play(".........")
+
+
+class TestEasyBotTakesFreeWins:
+    def test_completes_its_row(self):
+        assert bot_move("oo.xx.x..", "easy") == "oooxx.x.."
