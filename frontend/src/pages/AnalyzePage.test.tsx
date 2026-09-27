@@ -33,6 +33,7 @@ const API: Record<
 };
 
 beforeEach(() => {
+  vi.mocked(getCountGames).mockReset();
   vi.mocked(postAnalyze).mockImplementation(async ({ body }) => {
     const { score, turn } = API[body.board];
     return { data: { score, turn, winning_line: null } } as never;
@@ -151,15 +152,49 @@ describe("AnalyzePage", () => {
     expect(screen.getByLabelText("Position")).toHaveValue(".........");
   });
 
-  it("counts every legal game", async () => {
+  it("counts every legal game from the empty board", async () => {
     vi.mocked(getCountGames).mockResolvedValue({
       data: { count: 255168 },
     } as never);
     render(<AnalyzePage />);
+    expect(
+      screen.getByText(
+        "How many different games can be played from this position?",
+      ),
+    ).toBeVisible();
     expect(screen.getByTestId("game-count")).toHaveTextContent("?");
 
     await userEvent.click(screen.getByRole("button", { name: "Count games" }));
     expect(await screen.findByText("255,168")).toBeVisible();
+    expect(getCountGames).toHaveBeenCalledWith({
+      query: { board: "........." },
+    });
+  });
+
+  it("counts the games from the current position", async () => {
+    vi.mocked(getCountGames).mockResolvedValue({
+      data: { count: 25872 },
+    } as never);
+    render(<AnalyzePage />);
+    await userEvent.click(screen.getByRole("button", { name: "Cell 5" }));
+
+    await userEvent.click(screen.getByRole("button", { name: "Count games" }));
+    expect(await screen.findByText("25,872")).toBeVisible();
+    expect(getCountGames).toHaveBeenCalledWith({
+      query: { board: "....x...." },
+    });
+  });
+
+  it("forgets the count once the position changes", async () => {
+    vi.mocked(getCountGames).mockResolvedValue({
+      data: { count: 255168 },
+    } as never);
+    render(<AnalyzePage />);
+    await userEvent.click(screen.getByRole("button", { name: "Count games" }));
+    expect(await screen.findByText("255,168")).toBeVisible();
+
+    await userEvent.click(screen.getByRole("button", { name: "Cell 5" }));
+    expect(screen.getByTestId("game-count")).toHaveTextContent("?");
   });
 
   it("shows nothing new when the count fails", async () => {

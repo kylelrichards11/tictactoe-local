@@ -2,7 +2,8 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field
 
-Board = Annotated[str, Field(min_length=9, max_length=9, pattern=r"^[xo.]{9}$")]
+BOARD_PATTERN = r"^[xo.]{9}$"
+Board = Annotated[str, Field(min_length=9, max_length=9, pattern=BOARD_PATTERN)]
 
 
 class AnalyzeRequest(BaseModel):

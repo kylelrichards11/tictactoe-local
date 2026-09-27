@@ -226,9 +226,23 @@ export type PostEvaluateResponse = PostEvaluateResponses[keyof PostEvaluateRespo
 export type GetCountGamesData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * Board
+         */
+        board?: string;
+    };
     url: '/count-games';
 };
+
+export type GetCountGamesErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetCountGamesError = GetCountGamesErrors[keyof GetCountGamesErrors];
 
 export type GetCountGamesResponses = {
     /**

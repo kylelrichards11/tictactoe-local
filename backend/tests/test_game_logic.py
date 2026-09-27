@@ -72,3 +72,8 @@ class TestEquality:
 @pytest.mark.slow
 def test_count_games():
     assert count_games() == 255168
+
+
+def test_count_games_from_a_position():
+    assert count_games("o...x...x") == 536
+    assert count_games("....x....") == 25872

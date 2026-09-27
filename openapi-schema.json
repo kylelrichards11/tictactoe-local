@@ -135,6 +135,21 @@
         ],
         "summary": "Get Count Games",
         "operationId": "get_count_games",
+        "parameters": [
+          {
+            "name": "board",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 9,
+              "maxLength": 9,
+              "pattern": "^[xo.]{9}$",
+              "default": ".........",
+              "title": "Board"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -142,6 +157,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CountGamesResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
