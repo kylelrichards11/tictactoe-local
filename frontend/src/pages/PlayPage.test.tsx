@@ -71,6 +71,19 @@ describe("PlayPage", () => {
     expect(postBotMove).not.toHaveBeenCalled();
   });
 
+  it("refuses clicks on filled cells", async () => {
+    renderPlay();
+    await playAndWait(1);
+    // Seed 42's easy bot answers cell 1 with cell 6.
+    expect(cell(1)).toBeDisabled();
+    expect(cell(6)).toBeDisabled();
+    expect(cell(2)).toBeEnabled();
+
+    await userEvent.click(cell(1));
+    expect(status()).toHaveTextContent("Your move");
+    expect(cell(1).querySelector(".glyph-x")).not.toBeNull();
+  });
+
   it("ignores clicks while the bot thinks", async () => {
     renderPlay();
     await userEvent.click(cell(1));
