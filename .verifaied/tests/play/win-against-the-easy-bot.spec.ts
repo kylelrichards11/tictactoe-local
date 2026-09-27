@@ -3,6 +3,8 @@ import { test, expect } from '@playwright/test';
 
 test('Win against the easy bot', async ({ page }) => {
   // Seed 42 makes the easy bot's "random" replies the same every run.
+  // The easy bot now takes a free win when one is on the board; in this
+  // line it never has two in a row, so its replies stay the same.
   await page.goto('/?seed=42');
 
   await test.step('A fresh board, your move', async () => {

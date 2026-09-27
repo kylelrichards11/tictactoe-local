@@ -54,4 +54,8 @@ def bot_move(board: str, difficulty: str = "easy") -> str:
     if difficulty == "hard":
         return best_move(board)
 
+    # Even the easy bot takes a free win when one is on the board.
+    winning = [m for m in moves if State(m).score() is not None]
+    if winning:
+        return winning[0]
     return random.choice(moves)

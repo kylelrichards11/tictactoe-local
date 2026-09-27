@@ -215,6 +215,47 @@
         }
       }
     },
+    "/stats": {
+      "post": {
+        "tags": [
+          "stats"
+        ],
+        "summary": "Post Stats",
+        "operationId": "post_stats",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "summary": "Health Check",
@@ -379,6 +420,39 @@
         ],
         "title": "EvaluateResponse"
       },
+      "GameResultIn": {
+        "properties": {
+          "winner": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "x",
+                  "o"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Winner"
+          },
+          "difficulty": {
+            "type": "string",
+            "enum": [
+              "easy",
+              "hard"
+            ],
+            "title": "Difficulty"
+          }
+        },
+        "type": "object",
+        "required": [
+          "winner",
+          "difficulty"
+        ],
+        "title": "GameResultIn"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -423,6 +497,74 @@
           "next_states"
         ],
         "title": "NextStatesResponse"
+      },
+      "StatsRequest": {
+        "properties": {
+          "games": {
+            "items": {
+              "$ref": "#/components/schemas/GameResultIn"
+            },
+            "type": "array",
+            "title": "Games"
+          }
+        },
+        "type": "object",
+        "required": [
+          "games"
+        ],
+        "title": "StatsRequest"
+      },
+      "StatsResponse": {
+        "properties": {
+          "x_wins": {
+            "type": "integer",
+            "title": "X Wins"
+          },
+          "o_wins": {
+            "type": "integer",
+            "title": "O Wins"
+          },
+          "draws": {
+            "type": "integer",
+            "title": "Draws"
+          },
+          "hard_win_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hard Win Rate"
+          },
+          "easy_win_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Easy Win Rate"
+          },
+          "hard_bot_unbeaten": {
+            "type": "boolean",
+            "title": "Hard Bot Unbeaten"
+          }
+        },
+        "type": "object",
+        "required": [
+          "x_wins",
+          "o_wins",
+          "draws",
+          "hard_win_rate",
+          "easy_win_rate",
+          "hard_bot_unbeaten"
+        ],
+        "title": "StatsResponse"
       },
       "ValidationError": {
         "properties": {

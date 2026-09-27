@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { GetCountGamesData, GetCountGamesErrors, GetCountGamesResponses, HealthCheckData, HealthCheckResponses, PostAnalyzeData, PostAnalyzeErrors, PostAnalyzeResponses, PostBotMoveData, PostBotMoveErrors, PostBotMoveResponses, PostEvaluateData, PostEvaluateErrors, PostEvaluateResponses, PostNextStatesData, PostNextStatesErrors, PostNextStatesResponses } from './types.gen';
+import type { GetCountGamesData, GetCountGamesErrors, GetCountGamesResponses, HealthCheckData, HealthCheckResponses, PostAnalyzeData, PostAnalyzeErrors, PostAnalyzeResponses, PostBotMoveData, PostBotMoveErrors, PostBotMoveResponses, PostEvaluateData, PostEvaluateErrors, PostEvaluateResponses, PostNextStatesData, PostNextStatesErrors, PostNextStatesResponses, PostStatsData, PostStatsErrors, PostStatsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -64,6 +64,18 @@ export const getCountGames = <ThrowOnError extends boolean = false>(options?: Op
  */
 export const postBotMove = <ThrowOnError extends boolean = false>(options: Options<PostBotMoveData, ThrowOnError>) => (options.client ?? client).post<PostBotMoveResponses, PostBotMoveErrors, ThrowOnError>({
     url: '/bot-move',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Post Stats
+ */
+export const postStats = <ThrowOnError extends boolean = false>(options: Options<PostStatsData, ThrowOnError>) => (options.client ?? client).post<PostStatsResponses, PostStatsErrors, ThrowOnError>({
+    url: '/stats',
     ...options,
     headers: {
         'Content-Type': 'application/json',
