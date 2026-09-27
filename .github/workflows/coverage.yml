@@ -19,13 +19,30 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install backend dependencies
         working-directory: backend
         run: uv venv && uv pip install -e ".[dev]"
 
-      - name: Test with coverage
+      - name: Install frontend dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Backend tests with coverage
         working-directory: backend
         run: .venv/bin/pytest --cov --cov-branch --cov-context=test --cov-report=term-missing --cov-report=json:../coverage.json --junit-xml=../junit.xml
+
+      - name: Frontend tests with coverage
+        if: always()
+        working-directory: frontend
+        run: pnpm test:coverage
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -34,4 +51,6 @@ jobs:
           path: |
             coverage.json
             junit.xml
+            frontend/coverage/coverage-final.json
+            frontend/junit.xml
           if-no-files-found: error

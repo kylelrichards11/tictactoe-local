@@ -22,6 +22,14 @@ export type AnalyzeResponse = {
      * Score
      */
     score: number | null;
+    /**
+     * Turn
+     */
+    turn: 'x' | 'o';
+    /**
+     * Winning Line
+     */
+    winning_line: Array<number> | null;
 };
 
 /**
@@ -56,6 +64,30 @@ export type CountGamesResponse = {
      * Count
      */
     count: number;
+};
+
+/**
+ * EvaluateRequest
+ */
+export type EvaluateRequest = {
+    /**
+     * Board
+     */
+    board: string;
+};
+
+/**
+ * EvaluateResponse
+ */
+export type EvaluateResponse = {
+    /**
+     * Value
+     */
+    value: number;
+    /**
+     * Outcome
+     */
+    outcome: string;
 };
 
 /**
@@ -165,6 +197,31 @@ export type PostNextStatesResponses = {
 };
 
 export type PostNextStatesResponse = PostNextStatesResponses[keyof PostNextStatesResponses];
+
+export type PostEvaluateData = {
+    body: EvaluateRequest;
+    path?: never;
+    query?: never;
+    url: '/evaluate';
+};
+
+export type PostEvaluateErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type PostEvaluateError = PostEvaluateErrors[keyof PostEvaluateErrors];
+
+export type PostEvaluateResponses = {
+    /**
+     * Successful Response
+     */
+    200: EvaluateResponse;
+};
+
+export type PostEvaluateResponse = PostEvaluateResponses[keyof PostEvaluateResponses];
 
 export type GetCountGamesData = {
     body?: never;

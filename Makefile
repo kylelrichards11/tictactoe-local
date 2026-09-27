@@ -1,16 +1,24 @@
-.PHONY: api frontend test codegen format lint install
+.PHONY: api frontend test test-backend test-frontend codegen format lint install
 
-# Start the API server
+# Start the API server (http://localhost:8000)
 api:
 	cd backend && .venv/bin/uvicorn app.main:app --reload --port 8000
 
-# Install frontend dependencies and start dev server
+# Start the frontend dev server (http://localhost:5173, proxies /api to :8000)
 frontend:
-	cd frontend && pnpm install && pnpm dev
+	cd frontend && pnpm dev
 
-# Run backend tests with coverage
-test:
-	cd backend && .venv/bin/pytest --cov --cov-report=term-missing --cov-report=json
+# Run both suites with coverage + JUnit
+test: test-backend test-frontend
+
+# Backend: coverage.json (with per-test contexts) + junit.xml at the repo root
+test-backend:
+	cd backend && .venv/bin/pytest --cov --cov-branch --cov-context=test \
+		--cov-report=term-missing --cov-report=json:../coverage.json --junit-xml=../junit.xml
+
+# Frontend: frontend/coverage/coverage-final.json (Istanbul) + frontend/junit.xml
+test-frontend:
+	cd frontend && pnpm test:coverage
 
 # Regenerate OpenAPI schema + TypeScript client
 codegen:
@@ -24,11 +32,11 @@ format:
 
 # Lint code
 lint:
-	cd backend && .venv/bin/ruff check .
+	cd backend && .venv/bin/ruff check . && .venv/bin/ruff format --check .
 	cd frontend && pnpm lint
 	cd frontend && pnpm type-check
 
 # Install all dependencies
 install:
 	cd backend && uv venv && uv pip install -e ".[dev]"
-	cd frontend && pnpm install
+	pnpm install

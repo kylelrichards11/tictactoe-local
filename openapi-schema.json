@@ -87,6 +87,47 @@
         }
       }
     },
+    "/evaluate": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Post Evaluate",
+        "operationId": "post_evaluate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvaluateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/count-games": {
       "get": {
         "tags": [
@@ -196,11 +237,35 @@
               }
             ],
             "title": "Score"
+          },
+          "turn": {
+            "type": "string",
+            "enum": [
+              "x",
+              "o"
+            ],
+            "title": "Turn"
+          },
+          "winning_line": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Winning Line"
           }
         },
         "type": "object",
         "required": [
-          "score"
+          "score",
+          "turn",
+          "winning_line"
         ],
         "title": "AnalyzeResponse"
       },
@@ -254,6 +319,40 @@
           "count"
         ],
         "title": "CountGamesResponse"
+      },
+      "EvaluateRequest": {
+        "properties": {
+          "board": {
+            "type": "string",
+            "maxLength": 9,
+            "minLength": 9,
+            "pattern": "^[xo.]{9}$",
+            "title": "Board"
+          }
+        },
+        "type": "object",
+        "required": [
+          "board"
+        ],
+        "title": "EvaluateRequest"
+      },
+      "EvaluateResponse": {
+        "properties": {
+          "value": {
+            "type": "integer",
+            "title": "Value"
+          },
+          "outcome": {
+            "type": "string",
+            "title": "Outcome"
+          }
+        },
+        "type": "object",
+        "required": [
+          "value",
+          "outcome"
+        ],
+        "title": "EvaluateResponse"
       },
       "HTTPValidationError": {
         "properties": {

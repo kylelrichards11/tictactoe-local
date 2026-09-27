@@ -1,3 +1,7 @@
 {
-  "private": true
+  "name": "tictactoe-local",
+  "private": true,
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
+  }
 }

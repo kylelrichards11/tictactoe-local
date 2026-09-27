@@ -12,12 +12,13 @@ dependencies = [
 dev = [
     "pytest>=8.0.0",
     "pytest-cov>=6.0.0",
-    "ruff>=0.8.0",
+    "ruff==0.15.11",
     "httpx>=0.28.0",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = ["slow: exhaustive game-tree tests"]
 
 [tool.coverage.run]
 source = ["app"]

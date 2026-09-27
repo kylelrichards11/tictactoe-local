@@ -8,7 +8,7 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
-    ignores: ["dist", "src/client", "src/components/ui"],
+    ignores: ["dist", "coverage", "src/client"],
   },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
