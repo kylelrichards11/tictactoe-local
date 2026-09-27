@@ -17,6 +17,34 @@ describe("NeonBoard", () => {
     expect(onCell).toHaveBeenCalledWith(8);
   });
 
+  it("lets the page decide which cells take a click", async () => {
+    const onCell = vi.fn();
+    const canClick = vi.fn(() => true);
+    render(<NeonBoard board="x...o...." onCell={onCell} canClick={canClick} />);
+
+    expect(screen.getByRole("button", { name: "Cell 1" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Cell 5" })).toBeEnabled();
+    expect(canClick).toHaveBeenCalledWith(0, "x");
+    expect(canClick).toHaveBeenCalledWith(4, "o");
+    expect(canClick).toHaveBeenCalledWith(8, ".");
+
+    await userEvent.click(screen.getByRole("button", { name: "Cell 1" }));
+    expect(onCell).toHaveBeenCalledWith(0);
+  });
+
+  it("still locks every cell when disabled, whatever canClick says", () => {
+    render(
+      <NeonBoard
+        board="x........"
+        onCell={vi.fn()}
+        canClick={() => true}
+        disabled
+      />,
+    );
+    const cells = screen.getAllByRole("button");
+    expect(cells.filter((c) => c.hasAttribute("disabled"))).toHaveLength(9);
+  });
+
   it("draws an X and an O glyph", () => {
     const { container } = render(
       <NeonBoard board="x...o...." onCell={vi.fn()} />,

@@ -1,4 +1,4 @@
-import type { Mark } from "@/lib/game";
+import type { Cell, Mark } from "@/lib/game";
 import { winningLine } from "@/lib/game";
 
 import { Glyph } from "./Glyph";
@@ -6,11 +6,14 @@ import { Glyph } from "./Glyph";
 type Props = {
   board: string;
   onCell?: (index: number) => void;
+  /** Which cells take a click. Defaults to empty cells only, as in a game. */
+  canClick?: (index: number, cell: Cell) => boolean;
   disabled?: boolean;
   size?: "large" | "mini";
 };
 
 const GRID = [100, 200];
+const isEmpty = (_index: number, cell: Cell) => cell === ".";
 const centre = (i: number) => ({
   x: (i % 3) * 100 + 50,
   y: Math.floor(i / 3) * 100 + 50,
@@ -20,6 +23,7 @@ const centre = (i: number) => ({
 export function NeonBoard({
   board,
   onCell,
+  canClick = isEmpty,
   disabled = false,
   size = "large",
 }: Props) {
@@ -58,7 +62,7 @@ export function NeonBoard({
               type="button"
               className="cell"
               aria-label={`Cell ${i + 1}`}
-              disabled={disabled || cell !== "."}
+              disabled={disabled || !canClick(i, cell as Cell)}
               onClick={() => onCell(i)}
             >
               {glyph}

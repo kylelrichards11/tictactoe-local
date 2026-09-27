@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -25,6 +25,10 @@ const API: Record<
 > = {
   ".........": { score: null, turn: "x", next: ["x........", "....x...."] },
   "....x....": { score: null, turn: "o", next: ["o...x....", ".o..x...."] },
+  "o...x....": { score: null, turn: "x", next: ["ox..x....", "o...x...x"] },
+  "o...x...x": { score: null, turn: "o", next: ["oo..x...x"] },
+  "o.......x": { score: null, turn: "x", next: ["ox......x"] },
+  "........x": { score: null, turn: "o", next: ["o.......x"] },
   "xxxoo....": { score: 1, turn: "o", next: [] },
 };
 
@@ -54,11 +58,54 @@ describe("AnalyzePage", () => {
     ).toBeVisible();
   });
 
-  it("cycles a clicked cell and re-analyses", async () => {
+  it("places the side to move on each click, alternating X and O", async () => {
     render(<AnalyzePage />);
+    const position = screen.getByLabelText("Position");
+
     await userEvent.click(screen.getByRole("button", { name: "Cell 5" }));
+    expect(position).toHaveValue("....x....");
     expect(await screen.findByTestId("turn")).toHaveTextContent("O");
-    expect(screen.getByLabelText("Position")).toHaveValue("....x....");
+
+    await userEvent.click(screen.getByRole("button", { name: "Cell 1" }));
+    expect(position).toHaveValue("o...x....");
+    await waitFor(() =>
+      expect(screen.getByTestId("turn")).toHaveTextContent("X"),
+    );
+
+    await userEvent.click(screen.getByRole("button", { name: "Cell 9" }));
+    expect(position).toHaveValue("o...x...x");
+    await waitFor(() =>
+      expect(screen.getByTestId("turn")).toHaveTextContent("O"),
+    );
+    expect(postAnalyze).toHaveBeenLastCalledWith({
+      body: { board: "o...x...x" },
+    });
+  });
+
+  it("clears a filled cell when it is clicked again", async () => {
+    render(<AnalyzePage />);
+    const position = screen.getByLabelText("Position");
+    for (const n of [5, 1, 9]) {
+      await userEvent.click(screen.getByRole("button", { name: `Cell ${n}` }));
+    }
+    expect(screen.getByRole("button", { name: "Cell 5" })).toBeEnabled();
+
+    await userEvent.click(screen.getByRole("button", { name: "Cell 5" }));
+    expect(position).toHaveValue("o.......x");
+    await waitFor(() =>
+      expect(screen.getByTestId("turn")).toHaveTextContent("X"),
+    );
+
+    await userEvent.click(screen.getByRole("button", { name: "Cell 1" }));
+    expect(position).toHaveValue("........x");
+    await waitFor(() =>
+      expect(screen.getByTestId("turn")).toHaveTextContent("O"),
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Cell 9" }));
+    expect(position).toHaveValue(".........");
+    await waitFor(() =>
+      expect(screen.getByTestId("turn")).toHaveTextContent("X"),
+    );
   });
 
   it("loads a next board when it is clicked", async () => {

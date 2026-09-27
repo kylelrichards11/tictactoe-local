@@ -2,6 +2,7 @@
 
 export type Mark = "x" | "o";
 export type Outcome = Mark | "draw";
+export type Cell = Mark | ".";
 
 export const EMPTY_BOARD = ".........";
 

@@ -8,9 +8,9 @@ import {
   postNextStates,
 } from "@/client";
 import { NeonBoard } from "@/components/NeonBoard";
-import { EMPTY_BOARD, evaluationText, isBoard } from "@/lib/game";
+import { EMPTY_BOARD, evaluationText, isBoard, place, turn } from "@/lib/game";
 
-const CYCLE: Record<string, string> = { ".": "x", x: "o", o: "." };
+const anyCell = () => true;
 
 type Report = {
   analysis: AnalyzeResponse;
@@ -51,8 +51,13 @@ export function AnalyzePage() {
     setDraft(next);
   };
 
-  const cycle = (i: number) =>
-    load(board.slice(0, i) + CYCLE[board[i]] + board.slice(i + 1));
+  // An empty cell takes the side to move; a filled one is cleared.
+  const edit = (i: number) =>
+    load(
+      board[i] === "."
+        ? place(board, i, turn(board))
+        : board.slice(0, i) + "." + board.slice(i + 1),
+    );
 
   const countGames = async () => {
     setCounting(true);
@@ -68,9 +73,10 @@ export function AnalyzePage() {
       <section className="analyze-editor">
         <h1 className="title">Analyze</h1>
         <p className="lede">
-          Click cells to cycle X, O and empty, or type a position.
+          Click a cell to play the side to move, click again to clear, or type a
+          position.
         </p>
-        <NeonBoard board={board} onCell={cycle} />
+        <NeonBoard board={board} onCell={edit} canClick={anyCell} />
         <form
           className="position-form"
           onSubmit={(e) => {
