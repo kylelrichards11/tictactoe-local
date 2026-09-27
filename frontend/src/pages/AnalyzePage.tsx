@@ -22,7 +22,11 @@ export function AnalyzePage() {
   const [board, setBoard] = useState(EMPTY_BOARD);
   const [draft, setDraft] = useState(EMPTY_BOARD);
   const [report, setReport] = useState<Report | null>(null);
-  const [count, setCount] = useState<number | null>(null);
+  // A count belongs to the board it was made from; editing the board hides it.
+  const [counted, setCounted] = useState<{
+    board: string;
+    count: number;
+  } | null>(null);
   const [counting, setCounting] = useState(false);
 
   useEffect(() => {
@@ -60,11 +64,14 @@ export function AnalyzePage() {
     );
 
   const countGames = async () => {
+    const from = board;
     setCounting(true);
-    const { data } = await getCountGames();
-    setCount(data?.count ?? null);
+    const { data } = await getCountGames({ query: { board: from } });
+    setCounted(data ? { board: from, count: data.count } : null);
     setCounting(false);
   };
+
+  const count = counted?.board === board ? counted.count : null;
 
   const valid = isBoard(draft);
 
@@ -157,7 +164,7 @@ export function AnalyzePage() {
 
         <div className="count">
           <p>
-            How many different games of tic-tac-toe can be played?{" "}
+            How many different games can be played from this position?{" "}
             <strong className="count-value" data-testid="game-count">
               {count === null ? "?" : count.toLocaleString("en-US")}
             </strong>

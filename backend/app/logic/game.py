@@ -88,6 +88,10 @@ def _count_sub_games(board: str) -> int:
     return sum(_count_sub_games(move) for move in next_moves)
 
 
-def count_games() -> int:
-    """Count the number of legal games of tic-tac-toe."""
-    return _count_sub_games(EMPTY_BOARD)
+def count_games(board: str = EMPTY_BOARD) -> int:
+    """Count the legal games that can be played out from `board`.
+
+    From the empty board this is every legal game of tic-tac-toe: 255,168.
+    A finished position counts as the one game that ends there.
+    """
+    return _count_sub_games(board)

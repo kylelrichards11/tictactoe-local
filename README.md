@@ -20,9 +20,11 @@ turns the animation off.
   (which re-rolls the colours), a You / Draws / Bot scoreboard kept in localStorage
   with **Reset scores**, and keys 1 to 9 play a cell. `/?seed=42` makes the easy bot
   play the same moves every time.
-- **Analyze** (`/analyze`): click or type a position to see its evaluation, whose
-  turn it is, the perfect-play outcome and every legal next board. **Count games**
-  asks the API how many legal games exist (255,168).
+- **Analyze** (`/analyze`): click a cell to play the side to move (click again to
+  clear it), or type a position, to see its evaluation, whose turn it is, the
+  perfect-play outcome and every legal next board. **Count games** asks the API how
+  many legal games can be played from the current position (255,168 from the empty
+  board).
 - **History** (`/history`): your recent games and win rates, from localStorage.
 - **About** (`/about`): the stack, and a note that this is verifAIed's demo app.
 

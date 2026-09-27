@@ -1,8 +1,11 @@
-from fastapi import APIRouter, HTTPException
+from typing import Annotated
+
+from fastapi import APIRouter, HTTPException, Query
 
 from app.logic.bot import bot_move, minimax, outcome_label
-from app.logic.game import State, count_games
+from app.logic.game import EMPTY_BOARD, State, count_games
 from app.models.game import (
+    BOARD_PATTERN,
     AnalyzeRequest,
     AnalyzeResponse,
     BotMoveRequest,
@@ -42,8 +45,12 @@ def post_evaluate(req: EvaluateRequest):
 
 
 @router.get("/count-games", response_model=CountGamesResponse)
-def get_count_games():
-    return CountGamesResponse(count=count_games())
+def get_count_games(
+    board: Annotated[
+        str, Query(min_length=9, max_length=9, pattern=BOARD_PATTERN)
+    ] = EMPTY_BOARD,
+):
+    return CountGamesResponse(count=count_games(board))
 
 
 @router.post("/bot-move", response_model=BotMoveResponse)
